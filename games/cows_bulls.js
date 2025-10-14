@@ -25,13 +25,30 @@ function moreChance(randomDigits) {
   return isInterest ? chance(randomDigits) : '🤩' + 'Thanks for Playing , the Number was ' + randomDigits;
 }
 
+function getGuess() {
+  const guess = prompt('guess ur number :');
+  if (guess.length < 4 || guess.length > 4) {
+    console.log('invalid input');
+    return getGuess();
+  }
+  const numbers = '0123456789';
+  let string = '';
+  for (let index = 0; index < guess.length; index++) {
+    if (!numbers.includes(guess[index]) || string.includes(guess[index])) {
+      console.log('invalid input');
+      return getGuess();
+    }
+    string += guess[index];
+  }
+  return guess;
+}
+
 function PlayCowsAndBulls(randomDigits, chance) {
   let isFound = false;
   for (let curChance = 0; curChance < chance && !isFound; curChance++) {
-    const guess = prompt('guess ur number :');
-    if (guess.length > 4 || guess.length < 4) 
-      return requestFourDigit(randomDigits, chance - curChance);   
+    const guess = getGuess();  
     const guessedDigits = guessDigits(guess);
+    
     const bulls = countBull(randomDigits, guessedDigits);
     const cows = countCows(randomDigits, guessedDigits, bulls);
     console.log('Cows : ' + cows + '|' + ' Bulls : ' + bulls);
@@ -46,8 +63,7 @@ function guessDigits(guess) {
   guessedArray.push(parseInt(guess[0]));
   guessedArray.push(parseInt(guess[1])); 
   guessedArray.push(parseInt(guess[2])); 
-  guessedArray.push(parseInt(guess[4]));
-
+  guessedArray.push(parseInt(guess[3]));
   return guessedArray;
 }
 
@@ -68,11 +84,13 @@ function countBull(randomArray, guessedArray) {
 
 function countCows(randomArray, guessedArray, bulls) {
   let count = 0;
-  for (let index = 0;index < randomArray.length; index++) {
+  for (let index = 0; index < randomArray.length; index++) {
     if (randomArray.includes(guessedArray[index])) {
       count++;
     }
   }
+  console.log(randomArray);
+  
   return count - bulls;
 }
 
